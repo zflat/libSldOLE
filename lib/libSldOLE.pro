@@ -16,6 +16,8 @@ SOURCES += $$PWD/src/sld_app_context.cpp
 HEADERS += $$PWD/include/sld_app_context.h\
         $$PWD/include/libsldole_global.h
 
+INCLUDEPATH += $$PWD/include/
+
 unix {
     target.path = /usr/lib
     INSTALLS += target

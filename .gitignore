@@ -32,3 +32,6 @@ desktop.ini
 
 # Editors temporary files 
 *~
+
+build/*
+test/build/*
