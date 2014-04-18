@@ -1,13 +1,13 @@
-#ifndef SLD_FILE_HANDLE_H
-#define SLD_FILE_HANDLE_H
+#ifndef SLD_DOC_H
+#define SLD_DOC_H
 
 #include "libsldole_global.h"
 
-class LIBSLDOLESHARED_EXPORT SldFileHandle
+class LIBSLDOLESHARED_EXPORT SldDoc
 {
 
 public:
-    SldFileHandle();
+    SldDoc();
 };
 
-#endif // SLD_FILE_HANDLE_H
+#endif // SLD_DOC_H

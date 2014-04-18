@@ -9,8 +9,8 @@ class LIBSLDOLESHARED_EXPORT SldFileHandle
 
 public:
     SldFileHandle();
-    open(std::string const& fpath);
-    close();
+    //open(std::string const& fpath);
+    //close();
 };
 
 #endif // SLD_FILE_HANDLE_H

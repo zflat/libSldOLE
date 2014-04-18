@@ -1,6 +1,6 @@
-#include "sld_file_handle.h"
+#include "sld_model.h"
 
 
-SldFileHandle::SldFileHandle()
+SldModel::SldModel()
 {
 }

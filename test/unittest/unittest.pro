@@ -18,3 +18,5 @@ TEMPLATE = app
 SOURCES += tst_testsldappcontext.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
+
+include($$PWD/../../lib/libSldOLE.pri)
