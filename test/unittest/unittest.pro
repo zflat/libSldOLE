@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += testlib
-
 QT       -= gui
 
 TARGET = tst_testsldappcontext

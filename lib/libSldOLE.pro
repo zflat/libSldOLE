@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       -= gui
+QT       += testlib
 
 TARGET = libSldOLE
 TEMPLATE = lib
