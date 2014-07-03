@@ -28,10 +28,18 @@ TestSldAppContext::TestSldAppContext()
 
     if(swAppPtr){
         IModelDoc2Ptr swModel;
+
         hres = swAppPtr->get_IActiveDoc2(&swModel);
         if (FAILED(hres)){
             qWarning() << " Could not get the active doc";
-        }else if(swModel){
+        }else if(swModel){            
+            IModelViewPtr swView;
+            hres = swModel->get_IActiveView(&swView);
+
+            BSTR viewName = SysAllocString(L"*Isometric");
+            hres = swModel->ShowNamedView2(viewName, -1);
+            hres = swModel->ViewZoomtofit2();
+
             BSTR pathName;
             (hres) = swModel->GetPathName(&pathName);
             if (FAILED(hres)){
@@ -40,7 +48,7 @@ TestSldAppContext::TestSldAppContext()
                 QString qstr((QChar*)pathName, ::SysStringLen(pathName));
                 qDebug() << qstr.toStdString().c_str();
             }
-        }
+        }        
     }
     delete app;
 
