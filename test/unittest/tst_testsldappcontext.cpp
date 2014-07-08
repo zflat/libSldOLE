@@ -1,6 +1,15 @@
 #include <QString>
 #include <QtTest>
 
+#include "Windows.h"
+#include <QAxBase>
+#include <qaxtypes.h>
+
+#include "comdef.h"
+#include "ObjBase.h"
+
+// Q_DECLARE_METATYPE(IDispatch*)
+
 class TestSldAppContext : public QObject
 {
     Q_OBJECT
@@ -16,6 +25,10 @@ private Q_SLOTS:
 
 TestSldAppContext::TestSldAppContext()
 {
+
+    qDebug() << QVariant::nameToType("IDispatch*");
+    qDebug() << QVariant::nameToType("IDispatch");
+    qDebug() << QVariant::typeToName(QVariant::Bool);
 }
 
 void TestSldAppContext::initTestCase()
