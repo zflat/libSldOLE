@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += testlib
-
 QT       -= gui
 
 TARGET = tst_testsldappcontext
@@ -14,8 +13,12 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+HEADERS += $$PWD/include/*.h
 
-SOURCES += tst_testsldappcontext.cpp
+SOURCES += $$PWD/src/*.cpp
+SOURCES += $$PWD/libSldOLE_unittest_main.cpp
+
+
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 
