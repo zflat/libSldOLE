@@ -1,30 +1,17 @@
-#include <QString>
-#include <QtTest>
+#include "testsldappcontext.h"
 
-#include "Windows.h"
-#include <QAxBase>
-#include <qaxtypes.h>
-
-#include "comdef.h"
-#include "ObjBase.h"
-
-#include "sld_app_context.h"
-#include "include/tst_testsldappcontext.h"
-
-
-TestSldAppContext::TestSldAppContext()
-{
-
-    SldAppContext * app = new SldAppContext;
+TestSldAppContext::TestSldAppContext(QObject *parent) :
+    QObject(parent)
+{ SldAppContext * app = new SldAppContext;
     ISldWorksPtr swAppPtr = app->getApp();
 
     if(swAppPtr){
         IModelDoc2Ptr swModel;
 
-        hres = swAppPtr->get_IActiveDoc2(&swModel);
+        HRESULT  hres = swAppPtr->get_IActiveDoc2(&swModel);
         if (FAILED(hres)){
             qWarning() << " Could not get the active doc";
-        }else if(swModel){            
+        }else if(swModel){
             IModelViewPtr swView;
             hres = swModel->get_IActiveView(&swView);
 
@@ -40,10 +27,11 @@ TestSldAppContext::TestSldAppContext()
                 QString qstr((QChar*)pathName, ::SysStringLen(pathName));
                 qDebug() << qstr.toStdString().c_str();
             }
-        }        
+        }
     }
     delete app;
 }
+
 
 void TestSldAppContext::initTestCase()
 {
@@ -57,6 +45,3 @@ void TestSldAppContext::test_open_connection()
 {
     QVERIFY2(true, "Failure");
 }
-
-
-// #include "tst_testsldappcontext.moc"

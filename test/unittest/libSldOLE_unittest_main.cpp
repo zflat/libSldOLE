@@ -1,10 +1,9 @@
-
-
 #include <QString>
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "include/tst_testsldappcontext.h"
+#include "testsldmodel.h"
+#include "testsldappcontext.h"
 
 int main(int argc, char *argv[]){
 
@@ -27,4 +26,4 @@ int main(int argc, char *argv[]){
 }
 
 
-#include "libSldOLE_unittest_main.moc"
+// #include "libSldOLE_unittest_main.moc"

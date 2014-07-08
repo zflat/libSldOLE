@@ -1,3 +1,7 @@
+#ifndef TESTSLDMODEL_H
+#define TESTSLDMODEL_H
+
+#include <QObject>
 #include <QString>
 #include <QtTest>
 
@@ -10,12 +14,15 @@
 
 #include "sld_model.h"
 
-class TestModel : public QObject
+class TestSldModel : public QObject
 {
     Q_OBJECT
-
 public:
-    TestModel();
+    explicit TestSldModel(QObject *parent = 0);
+
+signals:
+
+public slots:
 
 private Q_SLOTS:
     void initTestCase();
@@ -24,3 +31,4 @@ private Q_SLOTS:
     void test_close();
 };
 
+#endif // TESTSLDMODEL_H

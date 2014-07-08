@@ -10,10 +10,11 @@
 
 #include "sld_model.h"
 #include "sld_app_context.h"
-#include "include/tst_testmodel.h"
 
+#include "testsldmodel.h"
 
-TestModel::TestModel()
+TestSldModel::TestSldModel(QObject *parent) :
+    QObject(parent)
 {
 
     SldAppContext * app = new SldAppContext;
@@ -22,20 +23,20 @@ TestModel::TestModel()
     delete app;
 }
 
-void TestModel::initTestCase()
+void TestSldModel::initTestCase()
 {
 }
 
-void TestModel::cleanupTestCase()
+void TestSldModel::cleanupTestCase()
 {
 }
 
-void TestModel::test_open()
+void TestSldModel::test_open()
 {
     QVERIFY2(true, "Failure");
 }
 
-void TestModel::test_close()
+void TestSldModel::test_close()
 {
     QVERIFY2(true, "Failure");
 }

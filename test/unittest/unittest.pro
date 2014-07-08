@@ -7,7 +7,7 @@
 QT       += testlib
 QT       -= gui
 
-TARGET = tst_testsldappcontext
+TARGET = libSldOLE_unittest
 CONFIG   += ordered
 CONFIG   += console
 CONFIG   -= app_bundle
@@ -15,11 +15,16 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 INCLUDEPATH += $$PWD/src \
-               $$PWD/include/
+               $$PWD/include/ \
+               $$PWD/
 
-HEADERS += $$PWD/include/*.h \
+HEADERS += $$PWD/*.h \
+    testsldmodel.h \
+    testsldappcontext.h
 
-SOURCES += $$PWD/src/*.cpp
+SOURCES += $$PWD/*.cpp \
+    testsldmodel.cpp \
+    testsldappcontext.cpp
 SOURCES += $$PWD/libSldOLE_unittest_main.cpp
 
 

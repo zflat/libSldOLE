@@ -1,3 +1,7 @@
+#ifndef TESTSLDAPPCONTEXT_H
+#define TESTSLDAPPCONTEXT_H
+
+#include <QObject>
 #include <QString>
 #include <QtTest>
 
@@ -13,13 +17,18 @@
 class TestSldAppContext : public QObject
 {
     Q_OBJECT
-
 public:
-    TestSldAppContext();
+    explicit TestSldAppContext(QObject *parent = 0);
+
+signals:
+
+public slots:
 
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void test_open_connection();
+
 };
 
+#endif // TESTSLDAPPCONTEXT_H
