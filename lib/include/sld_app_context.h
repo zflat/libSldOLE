@@ -3,7 +3,7 @@
 
 #include <QAxObject>
 #include <QString>
-#include <QtTest>
+#include <QDebug>
 
 #include "libsldole_global.h"
 

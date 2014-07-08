@@ -4,11 +4,15 @@
 SldAppContext::~SldAppContext()
 {
 
+    CoUninitialize();
 }
 
 SldAppContext::SldAppContext()
 {
-    HRESULT hres;
+    //Handling CoInitialize (and CoUninitialize!)
+    // http://stackoverflow.com/questions/2979113/qcroreapplication-qapplication-with-wmi
+    HRESULT hres =  CoInitializeEx(0, COINIT_MULTITHREADED);
+
     int proc_count = 0;
     // http://stackoverflow.com/questions/865152/how-can-i-get-a-process-handle-by-its-name-in-c
     PROCESSENTRY32 entry;
