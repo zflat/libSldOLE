@@ -1,13 +1,13 @@
-#include "sld_file_handle.h"
+#include "sld_file_info.h"
 #include <QFileInfo>
 #include <QDebug>
 
-SldFileHandle::SldFileHandle()
+SldFileInfo::SldFileInfo()
 {
 
 }
 
-long SldFileHandle::sld_doc_type(QString const& fpath){
+long SldFileInfo::sld_doc_type(QString const& fpath){
     QFileInfo fi(fpath);
     QString ext = fi.suffix().toLower();
 

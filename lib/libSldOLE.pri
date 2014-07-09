@@ -4,15 +4,15 @@ INCLUDEPATH += $$PWD/src \
                $$PWD/include/
 
 HEADERS += $$PWD/include/sld_app_context.h\
-        $$PWD/include/sld_file_handle.h \
+        $$PWD/include/sld_file_info.h \
         $$PWD/include/sld_component.h \
         $$PWD/include/sld_doc.h \
         $$PWD/include/sld_model.h \
         $$PWD/include/libsldole_global.h \
-        $$PWD/include/sldcontext.h
+        $$PWD/include/sldcontext.h \
 
 SOURCES += $$PWD/src/sld_app_context.cpp \
-        $$PWD/src/sld_file_handle.cpp \
+        $$PWD/src/sld_file_info.cpp \
         $$PWD/src/sld_component.cpp \
         $$PWD/src/sld_doc.cpp \
         $$PWD/src/sld_model.cpp \

@@ -1,16 +1,15 @@
-#ifndef SLD_FILE_HANDLE_H
-#define SLD_FILE_HANDLE_H
+#ifndef SLD_FILE_INFO_H
+#define SLD_FILE_INFO_H
 
 #include "libsldole_global.h"
 #include <string>
 
-class LIBSLDOLESHARED_EXPORT SldFileHandle
+class LIBSLDOLESHARED_EXPORT SldFileInfo
 {
 
 public:
-    SldFileHandle();
-    //open(std::string const& fpath);
-    //close();
+    SldFileInfo();
+
     /**
      * @brief Determine the file type based on file extension
      * @param fpath
@@ -19,4 +18,4 @@ public:
     static long sld_doc_type(QString const& fpath);
 };
 
-#endif // SLD_FILE_HANDLE_H
+#endif // SLD_FILE_INFO_H

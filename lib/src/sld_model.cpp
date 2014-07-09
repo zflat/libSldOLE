@@ -1,6 +1,6 @@
 #include <QDir>
 #include "sld_model.h"
-#include "sld_file_handle.h"
+#include "sld_file_info.h"
 
 
 SldModel::~SldModel()
@@ -22,7 +22,7 @@ bool SldModel::open(QString const& fpath, IModelDoc2Ptr *pRetModel){
     long err=0;
     long warn=0;
     long open_optns = swOpenDocOptions_e::swOpenDocOptions_Silent;
-    long doctype = SldFileHandle::sld_doc_type(fpath);
+    long doctype = SldFileInfo::sld_doc_type(fpath);
 
     bstr_config_name = SysAllocString(L"");
     bstr_path = SysAllocString(fpath.toStdWString().c_str());
