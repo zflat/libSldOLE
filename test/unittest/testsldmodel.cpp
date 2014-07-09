@@ -1,16 +1,8 @@
 #include <QString>
 #include <QtTest>
 
-#include "Windows.h"
-#include <QAxBase>
-#include <qaxtypes.h>
-
-#include "comdef.h"
-#include "ObjBase.h"
-
 #include "sld_model.h"
-#include "sld_app_context.h"
-
+#include "sldcontext.h"
 #include "testsldmodel.h"
 
 TestSldModel::TestSldModel(QObject *parent) :
@@ -25,18 +17,38 @@ TestSldModel::TestSldModel(QObject *parent) :
 
 void TestSldModel::initTestCase()
 {
+    context = new SldContext();
 }
 
 void TestSldModel::cleanupTestCase()
 {
+    delete context;
 }
 
 void TestSldModel::test_open()
 {
-    QVERIFY2(true, "Failure");
+    SldModel* model = new SldModel(context);
+    QString part_fname = "SampleA.SLDPRT";
+    QString part_path = QDir(DATAROOT).absoluteFilePath("SampleA.SLDPRT");
+
+    bool part_found = QDir(DATAROOT).exists(part_fname);
+    QVERIFY2(part_found, "Test data must exist");
+    bool path_exists = QDir(part_path).exists(part_path);
+    QVERIFY2(path_exists, "Test data must exist");
+
+    bool bres = model->open(part_path, ptrModel);
+    QVERIFY2( bres, "SldModel::open failed to open the file");
+    model->close();
+    delete model;
 }
 
 void TestSldModel::test_close()
 {
-    QVERIFY2(true, "Failure");
+    SldModel* model = new SldModel(context);
+    QString part_fname = "SampleA.SLDPRT";
+    QString part_path = QDir(DATAROOT).absoluteFilePath("SampleA.SLDPRT");
+
+    bool bres = model->open(part_path, ptrModel);
+    QVERIFY2(model->close(), "Could not close open file");
+    delete model;
 }

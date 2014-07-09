@@ -5,13 +5,8 @@
 #include <QString>
 #include <QtTest>
 
-#include "Windows.h"
-#include <QAxBase>
-#include <qaxtypes.h>
 
-#include "comdef.h"
-#include "ObjBase.h"
-
+#include "libsldole_global.h"
 #include "sld_model.h"
 
 class TestSldModel : public QObject
@@ -29,6 +24,10 @@ private Q_SLOTS:
     void cleanupTestCase();
     void test_open();
     void test_close();
+
+private:
+    SldContext * context;
+    IModelDoc2Ptr *ptrModel;
 };
 
 #endif // TESTSLDMODEL_H

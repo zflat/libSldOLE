@@ -8,11 +8,13 @@ QT       += testlib
 QT       -= gui
 
 TARGET = libSldOLE_unittest
-CONFIG   += ordered
 CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
+
+include($$PWD/../../lib/libSldOLE.pri)
+
 
 INCLUDEPATH += $$PWD/src \
                $$PWD/include/ \
@@ -29,6 +31,4 @@ SOURCES += $$PWD/libSldOLE_unittest_main.cpp
 
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
-
-
-include($$PWD/../../lib/libSldOLE.pri)
+DEFINES += DATAROOT=\\\"$$PWD/../../../integration/data\\\"
