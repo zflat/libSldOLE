@@ -12,7 +12,7 @@ int main(int argc, char *argv[]){
     HRESULT hres =  CoInitializeEx(0, COINIT_MULTITHREADED);
     IModelDoc2Ptr ptrModel;
 
-    qDebug() << DATAROOT;
+    qDebug() << "DATAROOT: " << DATAROOT;
 
     // Construct application before running tests
     // http://stackoverflow.com/a/16711202

@@ -10,6 +10,7 @@ HEADERS += $$PWD/include/sld_app_context.h\
         $$PWD/include/sld_model.h \
         $$PWD/include/libsldole_global.h \
         $$PWD/include/sldcontext.h \
+        $$PWD//include/smartvars.h
 
 SOURCES += $$PWD/src/sld_app_context.cpp \
         $$PWD/src/sld_file_info.cpp \

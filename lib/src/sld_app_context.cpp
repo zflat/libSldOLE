@@ -36,7 +36,6 @@ SldAppContext::SldAppContext()
     }
     CloseHandle(snapshot);
 
-
     if(proc_count == 1){
         hres = swApp.CreateInstance(__uuidof(SldWorks), NULL, CLSCTX_LOCAL_SERVER);
         if (FAILED(hres)){

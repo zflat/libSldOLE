@@ -24,6 +24,8 @@ private Q_SLOTS:
     void cleanupTestCase();
     void test_open();
     void test_close();
+    void test_activedoc();
+    void test_activedoc_ctor();
 
 private:
     SldContext * context;
