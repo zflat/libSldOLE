@@ -22,6 +22,7 @@ public slots:
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
+    void test_change_color();
     void test_open();
     void test_close();
     void test_activedoc();

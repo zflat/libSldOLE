@@ -23,3 +23,4 @@ SOURCES += $$PWD/src/sld_app_context.cpp \
 # TYPELIBS += $$system(dumpcpp -getfile {83A33D31-27C5-11CE-BFD4-00400513BB57} -compat -nometaobject)
 # TYPELIBS += $$system(dumpcpp -getfile {4687F359-55D0-4CD3-B6CF-2EB42C11F989} -compat -n SldConst)
 
+DEFINES += NOMAXMIN

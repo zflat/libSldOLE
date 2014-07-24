@@ -17,7 +17,7 @@ public:
     bool close();
     bool save();
     bool change_color(const std::vector<double>& color = std::vector<double>());
-    IModelDoc2Ptr get();
+    IModelDoc2Ptr iptr();
     QString path_name();
 
 private:

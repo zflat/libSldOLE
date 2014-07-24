@@ -5,6 +5,8 @@
 #include "sldcontext.h"
 #include "testsldmodel.h"
 
+#include "smartvars.h"
+
 TestSldModel::TestSldModel(QObject *parent) :
     QObject(parent)
 {
@@ -46,7 +48,7 @@ void TestSldModel::test_close()
 {
     SldModel* model = new SldModel(context);
     QString part_fname = "SampleA.SLDPRT";
-    QString part_path = QDir(DATAROOT).absoluteFilePath("SampleA.SLDPRT");
+    QString part_path = QDir(DATAROOT).absoluteFilePath(part_fname);
 
     bool bres = model->open(part_path, ptrModel);
     QVERIFY2(model->close(), "Could not close open file");
@@ -77,9 +79,10 @@ void TestSldModel::test_activedoc_ctor(){
 void TestSldModel::test_activedoc(){
 
     SldModel* model = new SldModel(context);
-    QString part_fname = "SampleA.SLDPRT";
+    QString part_fname("SampleA.SLDPRT");
     QString part_path = QDir(DATAROOT).absoluteFilePath(part_fname);
     bool bres = model->open(part_path, ptrModel);
+    QVERIFY2(bres, "Could not open open file");
 
     ISldWorksPtr swAppPtr = context->get_swApp();
     if(swAppPtr){
@@ -108,6 +111,38 @@ void TestSldModel::test_activedoc(){
             QVERIFY2(pathName == pathNameRef, "Path name from IModelDoc2Ptr matches IModelDoc2**");
         }
     }
+
+    QVERIFY2(model->close(), "Could not close open file");
+    delete model;
+}
+
+void TestSldModel::test_change_color(){
+    SldModel* model = new SldModel(context);
+    QString part_fname = "SampleA.SLDPRT";
+    QString part_path = QDir(DATAROOT).absoluteFilePath(part_fname);
+    bool bres = model->open(part_path, ptrModel);
+    QVERIFY2(bres, "Could not open open file");
+
+    VARIANT mat_props0;
+    model->iptr()->get_MaterialPropertyValues(static_cast<VARIANT*>(&mat_props0));
+    SafeDoubleArray arr_mat_props0(mat_props0);
+
+    model->change_color();
+
+    VARIANT mat_props1;
+    model->iptr()->get_MaterialPropertyValues(static_cast<VARIANT*>(&mat_props1));
+    SafeDoubleArray arr_mat_props1(mat_props1);
+
+    double clr_val(arr_mat_props1[0]);
+    for(uint i=0; i<=2 && i < arr_mat_props1.getSize() ; i++){
+        QVERIFY2(arr_mat_props1[i] != arr_mat_props0[i], "Material color is changed");
+        if(i>0){
+            QVERIFY2(arr_mat_props1[i] != clr_val, "Not all color components are equal");
+        }
+
+        qDebug() << i << " " << arr_mat_props1[i];
+    }
+    QTest::qSleep(1500);
 
     QVERIFY2(model->close(), "Could not close open file");
     delete model;

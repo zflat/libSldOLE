@@ -10,9 +10,7 @@
 #include <comdef.h>
 #include <objbase.h>
 
-
 #include <tlhelp32.h>
-
 
 #if defined(LIBSLDOLE_LIBRARY)
 #  define LIBSLDOLESHARED_EXPORT Q_DECL_EXPORT

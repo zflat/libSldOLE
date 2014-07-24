@@ -5,7 +5,6 @@
 #include "sld_file_info.h"
 #include "smartvars.h"
 
-
 SldModel::~SldModel(){}
 
 
@@ -20,7 +19,7 @@ SldModel::SldModel(SldContext * sld_cont, IModelDoc2** ptr_given_model) \
         qWarning() << "Null value passed to pModel";
     }
 }
-IModelDoc2Ptr SldModel::get(){
+IModelDoc2Ptr SldModel::iptr(){
     return pModel;
 }
 
@@ -108,6 +107,10 @@ QString SldModel::path_name(){
 }
 
 bool SldModel::change_color(const std::vector<double>& color){
+    VARIANT_BOOL bret = VARIANT_FALSE;
+    HRESULT hres = NOERROR;
+
+
     std::vector<double> color_vals = \
             (color.size() >= 3) ? color: rand_color();
 
@@ -116,22 +119,55 @@ bool SldModel::change_color(const std::vector<double>& color){
     // variants array http://www.codeproject.com/Articles/6462/A-simple-class-to-encapsulate-VARIANTs
 
 
-    // save the material properties array
+    ////////////////////////////////////////////////
+    // Save a copy of the material properties array
+
     VARIANT mat_props;
     pModel->get_MaterialPropertyValues(static_cast<VARIANT*>(&mat_props));
     SafeDoubleArray arr_mat_props(mat_props);
 
-    // overwrite the color in the material properties
+    /////////////////////////////////////////////////
+    // Overwrite the color in the material properties array
 
-    for(uint i=0; i<2 && i < arr_mat_props.getSize() ; i++){
-        qDebug() << arr_mat_props[i];
+    for(uint i=0; i<=2 && i < arr_mat_props.getSize() ; i++){
+        arr_mat_props[i] = color_vals[i];
     }
 
-    // remove the existing material properties
+    //////////////////////////////////////////
+    // Remove the existing material properties
 
-    // assign the material properties back to the model
+    IModelDocExtensionPtr model_extension;
+    hres = pModel->get_Extension(&model_extension);
+    if(FAILED(hres)){
+        qWarning() << "Failed to access IModelDocExtension for the model";
+        return false;
+    }
 
-    return false;
+    QVariant q_config_count(0);
+    long config_count;
+    pModel->GetConfigurationCount(&config_count);
+    SafeBSTRArray config_names(0,1); // empty array
+    hres = model_extension->IRemoveMaterialProperty(\
+                swInConfigurationOpts_e::swAllConfiguration,config_count, config_names, &bret);
+    if( FAILED(hres) ){
+        qWarning()<< "Failed to remove existing material properties for the model";
+        // return false;
+    }
+
+    ///////////////////////////////////////////////////////////
+    // Assign the updated material properties back to the model
+
+    mat_props = static_cast<VARIANT>(arr_mat_props);
+    hres = pModel->put_MaterialPropertyValues(mat_props);
+    if(FAILED(hres)){
+        qWarning()<< "Failed to update existing material properties for the model";
+    }
+
+    // rebuild
+
+    hres = pModel->ForceRebuild3(VARIANT_TRUE, &bret);
+
+    return true;
 }
 
 std::vector<double> SldModel::rand_color(){
