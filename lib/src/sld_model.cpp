@@ -1,6 +1,6 @@
 #include <QDir>
 #include <QString>
-#include <random>
+#include <QTime>
 #include "sld_model.h"
 #include "sld_file_info.h"
 #include "smartvars.h"
@@ -171,12 +171,16 @@ bool SldModel::change_color(const std::vector<double>& color){
 }
 
 std::vector<double> SldModel::rand_color(){
-    std::default_random_engine generator;
-    std::uniform_real_distribution<double> distribution(0.85,1.0);
+    qsrand(QTime::currentTime().msec());
+
+    double f;
+    double fMin = 0.35;
+    double fMax = 0.95;
 
     std::vector<double> clr(3);
     for(int i=0; i<3; i++){
-        clr[i] = distribution(generator);
+        f = (double)qrand() / RAND_MAX;
+        clr[i] = fMin + f * (fMax - fMin);
     }
     return clr;
 }

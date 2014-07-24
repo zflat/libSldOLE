@@ -134,15 +134,16 @@ void TestSldModel::test_change_color(){
     SafeDoubleArray arr_mat_props1(mat_props1);
 
     double clr_val(arr_mat_props1[0]);
+    bool identical_channels = false;
     for(uint i=0; i<=2 && i < arr_mat_props1.getSize() ; i++){
         QVERIFY2(arr_mat_props1[i] != arr_mat_props0[i], "Material color is changed");
-        if(i>0){
-            QVERIFY2(arr_mat_props1[i] != clr_val, "Not all color components are equal");
+        if(i>0 && arr_mat_props1[i] == clr_val){
+            identical_channels = true;
         }
-
         qDebug() << i << " " << arr_mat_props1[i];
     }
-    QTest::qSleep(1500);
+    QVERIFY2(!identical_channels, "Not all color components are equal");
+    QTest::qSleep(500);
 
     QVERIFY2(model->close(), "Could not close open file");
     delete model;
