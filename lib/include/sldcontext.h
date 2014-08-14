@@ -18,6 +18,8 @@ public:
     ~SldContext();
     ISldWorksPtr get_swApp();
 
+    SldAppContext * app();
+
 private:
     SldAppContext * ptr_app_context;
 };

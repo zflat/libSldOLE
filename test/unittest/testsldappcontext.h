@@ -28,6 +28,7 @@ private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void test_open_connection();
+    void test_list_open_docs();
 
 };
 

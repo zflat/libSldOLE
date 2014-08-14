@@ -65,11 +65,11 @@ public:
 
     ~SafeArray(){UnaccessData();}
 
-    operator T* () {assert(m_access);return m_arrayData;}
+    operator T* () {Q_ASSERT(m_access);return m_arrayData;}
 
-    operator VARIANT () {assert(m_access);UnaccessData(); return *m_input;}
+    operator VARIANT () {Q_ASSERT(m_access);UnaccessData(); return *m_input;}
 
-    T & operator[](int i) {assert(m_access&&m_arrayData);return m_arrayData[i];}
+    T & operator[](int i) {Q_ASSERT(m_access&&m_arrayData);return m_arrayData[i];}
 
 private:
 

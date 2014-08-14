@@ -13,3 +13,7 @@ SldContext::~SldContext()
 ISldWorksPtr SldContext::get_swApp(){
     return ptr_app_context->getApp();
 }
+
+SldAppContext * SldContext::app(){
+    return ptr_app_context;
+}

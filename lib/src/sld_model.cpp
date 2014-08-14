@@ -23,6 +23,40 @@ IModelDoc2Ptr SldModel::iptr(){
     return pModel;
 }
 
+bool SldModel::open(const QString &fpath, IModelDoc2 **pRetModel){
+
+    if(NULL != pModel){
+        return false;
+    }
+
+    pModel = NULL;
+    if(! QDir(fpath).exists(fpath)){
+        return false;
+    }
+
+    long err=0;
+    long warn=0;
+    long open_optns = swOpenDocOptions_e::swOpenDocOptions_Silent;
+    long doctype = SldFileInfo::sld_doc_type(fpath);
+
+    bstr_config_name = SysAllocString(L"");
+    bstr_path = SysAllocString(fpath.toStdWString().c_str());
+
+    if(doctype == swDocumentTypes_e::swDocNONE){
+        return false;
+    }
+
+    context->get_swApp()->OpenDoc6(bstr_path, doctype, open_optns, bstr_config_name, &err, &warn, pRetModel);
+
+    if(NULL == *pRetModel){
+        qWarning() << "Could net initialize the model on opening";
+        return false;
+    }else{
+        pModel = *pRetModel;
+        return true;
+    }
+}
+
 bool SldModel::open(QString const& fpath, IModelDoc2Ptr* pRetModel){
     if(NULL != pModel){
         return false;
@@ -47,11 +81,13 @@ bool SldModel::open(QString const& fpath, IModelDoc2Ptr* pRetModel){
 
     context->get_swApp()->OpenDoc6(bstr_path, doctype, open_optns, bstr_config_name, &err, &warn, (IModelDoc2**)&pModel);
 
-    if(NULL != pRetModel){
-        pRetModel = (IModelDoc2Ptr*)&pModel;
+    if(NULL == pModel){
+        qWarning() << "Could net initialize the model on opening";
+        return false;
+    }else{
+        pRetModel = (IModelDoc2Ptr*)&pModel;        
+        return true;
     }
-
-    return true;
 }
 
 bool SldModel::save(){
@@ -77,6 +113,67 @@ bool SldModel::save(){
     return retval;
 }
 
+bool SldModel::save_as_silent(const QString &fpath, bool as_copy){
+    if(NULL == pModel){
+        qWarning() << "Model not initialized";
+        return false;
+    }
+
+    // VARIANT_BOOL bres = false;
+    // convert fpath to BSTR
+    BSTR bstr_fpath = SysAllocString(fpath.toStdWString().c_str());
+    long status;
+    VARIANT_BOOL blnvar_as_copy = (as_copy) ? VARIANT_TRUE: VARIANT_FALSE;
+
+    pModel->SaveAsSilent(bstr_fpath, blnvar_as_copy, &status);
+    return true;
+}
+
+bool SldModel::save_as(const QString &fpath){
+
+    if(NULL == pModel){
+        qWarning() << "Model not initialized";
+        return false;
+    }
+
+    long save_err=0;
+    long save_warn=0;
+    long save_optns = swSaveAsOptions_e::swSaveAsOptions_Silent\
+            | swSaveAsOptions_e::swSaveAsOptions_AvoidRebuildOnSave \
+            | swSaveAsOptions_e::swSaveAsOptions_Copy;
+
+    /// Get the ModelDocExtension
+    IModelDocExtensionPtr swModelExt;
+    HRESULT hres = pModel->get_Extension(&swModelExt);
+    if (FAILED(hres)){
+        qWarning() << " Could not get the document extension";
+        return false;
+    }
+
+    ////////////////////////////
+    /// Save using the extension
+
+    VARIANT_BOOL bres = false;
+    // convert fpath to BSTR
+    BSTR bstr_fpath = SysAllocString(fpath.toStdWString().c_str());
+
+    hres = swModelExt->SaveAs(bstr_fpath,\
+                       swSaveAsCurrentVersion,\
+                       save_optns, \
+                       NULL, \
+                       &save_err, &save_warn, &bres\
+                      );
+    if( !bres ){
+        qWarning() << "SaveAs failed";
+        return false;
+    }
+
+    parse_save_err_warns(save_err, save_warn);
+
+    bool retval = (bool)bres;
+    return retval;
+}
+
 bool SldModel::close(){
     if(NULL == pModel){
         return false;
@@ -92,7 +189,7 @@ bool SldModel::close(){
 
 QString SldModel::path_name(){
     if(NULL == pModel){
-        return false;
+        return NULL;
     }
     BSTR pathName;
     HRESULT hres = pModel->GetPathName(&pathName);
@@ -175,7 +272,7 @@ std::vector<double> SldModel::rand_color(){
 
     double f;
     double fMin = 0.35;
-    double fMax = 0.95;
+    double fMax = 1.0;
 
     std::vector<double> clr(3);
     for(int i=0; i<3; i++){

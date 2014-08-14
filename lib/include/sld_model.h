@@ -14,8 +14,11 @@ public:
     ~SldModel();
 
     bool open(QString const& fpath, IModelDoc2Ptr *pRetModel);
+    bool open(QString const& fpath, IModelDoc2** pRetModel);
     bool close();
     bool save();
+    bool save_as(const QString & fpath);
+    bool save_as_silent(const QString & fpath, bool as_copy);
     bool change_color(const std::vector<double>& color = std::vector<double>());
     IModelDoc2Ptr iptr();
     QString path_name();

@@ -48,3 +48,38 @@ SldAppContext::SldAppContext()
 ISldWorksPtr SldAppContext::getApp(){
     return swApp;
 }
+
+QStringList* SldAppContext::open_docs_list(){
+    if(NULL == swApp){
+        qCritical() << "Solidworks Instance not connected.";
+        return NULL;
+    }
+
+    IModelDoc2Ptr pModelDoc;
+    IEnumDocuments2Ptr pEnumDoc;
+    long nFetched = -1;
+    BSTR bstr_PathName;
+    QStringList* ret_list = new QStringList();
+
+    HRESULT hres = swApp->EnumDocuments2(&pEnumDoc);
+    if (FAILED(hres)){
+        qWarning() << " Could not retriev the open documents enumeration.";
+        return NULL;
+    }
+
+    hres = pEnumDoc->Reset();
+    do{
+       // Reset before reuse
+       pModelDoc = NULL;
+
+       // Could also check HRESULT or nFetched
+       hres = pEnumDoc->Next(1, &pModelDoc, &nFetched);
+
+       if (pModelDoc){
+        hres = pModelDoc->GetPathName(&bstr_PathName);
+        ret_list->append(QString((QChar*)bstr_PathName, ::SysStringLen(bstr_PathName)));
+      }
+    } while (pModelDoc);
+
+    return ret_list;
+}

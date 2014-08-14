@@ -4,6 +4,7 @@
 #include <QAxObject>
 #include <QString>
 #include <QDebug>
+#include <QStringList>
 
 #include "libsldole_global.h"
 
@@ -14,6 +15,8 @@ public:
     SldAppContext();
     ~SldAppContext();
     ISldWorksPtr getApp();
+
+    QStringList* open_docs_list();
 
 private:
     ISldWorksPtr swApp;
