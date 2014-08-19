@@ -4,6 +4,7 @@
 #include "sld_model.h"
 #include "sld_file_info.h"
 #include "smartvars.h"
+#include "color_helper.h"
 
 SldModel::~SldModel(){}
 
@@ -209,7 +210,7 @@ bool SldModel::change_color(const std::vector<double>& color){
 
 
     std::vector<double> color_vals = \
-            (color.size() >= 3) ? color: rand_color();
+            (color.size() >= 3) ? color: ColorHelper::rand_color();
 
     // SafeArrays example
     // http://help.solidworks.com/2013/English/api/sldworksapi/Get_Spline_Points_Example_CPlusPlus_COM.htm
@@ -265,21 +266,6 @@ bool SldModel::change_color(const std::vector<double>& color){
     hres = pModel->ForceRebuild3(VARIANT_TRUE, &bret);
 
     return true;
-}
-
-std::vector<double> SldModel::rand_color(){
-    qsrand(QTime::currentTime().msec());
-
-    double f;
-    double fMin = 0.35;
-    double fMax = 1.0;
-
-    std::vector<double> clr(3);
-    for(int i=0; i<3; i++){
-        f = (double)qrand() / RAND_MAX;
-        clr[i] = fMin + f * (fMax - fMin);
-    }
-    return clr;
 }
 
 void SldModel::parse_save_err_warns(const long &e,const  long &w){

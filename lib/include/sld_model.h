@@ -32,7 +32,6 @@ private:
     void parse_save_err_warns(const long &e,const  long &w);
     void warn(const long &val, const long &sldCONST, const QString & msg);
     void err(const long &val, const long &sldCONST, const QString & msg);
-    std::vector<double> rand_color();
 
 };
 

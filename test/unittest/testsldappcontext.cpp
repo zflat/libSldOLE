@@ -65,7 +65,7 @@ void TestSldAppContext::test_list_open_docs(){
 
     SldModel* model = new SldModel(context);
     QString part_fname = "SampleA.SLDPRT";
-    QString part_path = QDir(DATAROOT).absoluteFilePath("SampleA.SLDPRT");
+    QString part_path = QDir::toNativeSeparators(QDir(DATAROOT).absoluteFilePath("SampleA.SLDPRT"));
 
     bool part_found = QDir(DATAROOT).exists(part_fname);
     QVERIFY2(part_found, "Test data must exist");
@@ -89,7 +89,7 @@ void TestSldAppContext::test_list_open_docs(){
         QString current = *it;
         // qDebug() << current.toStdString().c_str();
     }
-    QVERIFY2(names->contains(part_path.replace("/", "\\")), "The list of names must contain the intenionally opened document.");
+    QVERIFY2(names->contains(part_path), "The list of names must contain the intenionally opened document.");
 
     ////////////////////////////////
     /// CLEANUP
