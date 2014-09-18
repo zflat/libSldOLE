@@ -1,5 +1,10 @@
 #include "color_helper.h"
 
+// http://www.f4.fhtw-berlin.de/~barthel/ImageJ/ColorInspector//HTMLHelp/farbraumJava.htm
+// http://www.brucelindbloom.com/index.html?Equations.html
+// http://stackoverflow.com/questions/5392061/algorithm-to-check-similarity-of-colors-based-on-rgb-values-or-maybe-hsv
+
+
 ColorHelper::ColorHelper()
 {
 }
@@ -60,8 +65,6 @@ std::vector<double> ColorHelper::hsv2rgb(double h, double s, double v){
         }else if(hue[i] >= 1.0/2 && hue[i] < 2.0/3){
             hsv_map[i] += s*v*(4.0-6.0*hue[i]);
         }
-
-        qDebug() << hsv_map[i];
     }
 
     return hsv_map;

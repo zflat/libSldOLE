@@ -234,6 +234,7 @@ bool SldModel::change_color(const std::vector<double>& color){
     //////////////////////////////////////////
     // Remove the existing material properties
 
+    /*
     IModelDocExtensionPtr model_extension;
     hres = pModel->get_Extension(&model_extension);
     if(FAILED(hres)){
@@ -250,7 +251,8 @@ bool SldModel::change_color(const std::vector<double>& color){
     if( FAILED(hres) ){
         qWarning()<< "Failed to remove existing material properties for the model";
         // return false;
-    }
+    }    
+    */
 
     ///////////////////////////////////////////////////////////
     // Assign the updated material properties back to the model
