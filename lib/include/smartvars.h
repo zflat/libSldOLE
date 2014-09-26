@@ -2,6 +2,7 @@
 #define SMARTVARS_H
 
 #include <QDebug>
+#include "OaIdl.h"
 
 /**
  * See:
@@ -71,7 +72,14 @@ public:
 
     T & operator[](int i) {Q_ASSERT(m_access&&m_arrayData);return m_arrayData[i];}
 
-private:
+    HRESULT toSAFEARRAY(SAFEARRAY ** saDataOut){
+        /*
+         * http://msdn.microsoft.com/en-us/library/ms221451.aspx
+         */
+        return SafeArrayCopy(m_pSafeArray, saDataOut);
+    }
+
+protected:
 
     void UnaccessData(){
         if(m_access){

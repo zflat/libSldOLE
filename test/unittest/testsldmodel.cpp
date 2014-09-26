@@ -13,7 +13,7 @@ TestSldModel::TestSldModel(QObject *parent) :
 
     SldAppContext * app = new SldAppContext;
     ISldWorksPtr swAppPtr = app->getApp();
-
+    swAppPtr->Release();
     delete app;
 }
 

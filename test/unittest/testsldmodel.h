@@ -8,6 +8,7 @@
 
 #include "libsldole_global.h"
 #include "sld_model.h"
+#include "sldcontext.h"
 
 class TestSldModel : public QObject
 {

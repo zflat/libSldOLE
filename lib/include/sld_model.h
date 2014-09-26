@@ -23,7 +23,7 @@ public:
     IModelDoc2Ptr iptr();
     QString path_name();
 
-private:
+protected:
     SldContext * context;
     IModelDoc2Ptr pModel;
     BSTR bstr_config_name;
