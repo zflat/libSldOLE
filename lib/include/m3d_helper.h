@@ -18,7 +18,7 @@ public:
 	/**
 	* Rotate, Scale and Translate (Affine transformation)
 	*/
-    std::vector<double> trasform(std::vector<double> pt_0, IMathTransformPtr xform);
+    std::vector<double> transform(std::vector<double> pt_0, IMathTransformPtr xform);
     
 	/**
 	* Rotate, Scale only
@@ -30,6 +30,7 @@ public:
     IMathTransformPtr xformI();
     IMathTransformPtr xformT(std::vector<double> rot_trans, double scale = 1);
 
+    IMathPointPtr makeMathPoint(std::vector<double> vals);
     
 protected:
     SldContext * context;

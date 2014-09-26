@@ -15,7 +15,18 @@ IMathUtilityPtr M3dHelper::iptr(){
 	return math;
 }
 
-std::vector<double> M3dHelper::trasform(std::vector<double> pt_vals, IMathTransformPtr xT){
+
+/**
+ * @brief M3dHelper::transform Transform the point by multiplying with the transform matrix.
+ * Note the rotation matrix is interpreted as post-multiplication. This is inferred from the
+ * documentation for IMathUtility::CreateMatrix where the lower row contains the translation vector.
+ * This implies that the homogeneous is the transpose of Pre-multiplcation, column vector, based
+ * transformation matrix.
+ * @param pt_vals point in row vector form <x, y, z>
+ * @param xT Tranformation matrix
+ * @return
+ */
+std::vector<double> M3dHelper::transform(std::vector<double> pt_vals, IMathTransformPtr xT){
 
     // HELP!!!
     // http://forums.codeguru.com/showthread.php?74053-Help-with-VARIANT-and-LPDISPATCH*
@@ -33,63 +44,25 @@ std::vector<double> M3dHelper::trasform(std::vector<double> pt_vals, IMathTransf
     HRESULT hr = S_OK;
     IMathPointPtr pt0Ptr = NULL;
     IMathPointPtr pt1Ptr = NULL;
-    SafeDoubleArray s_vals(3);
-
-    for(uint i=0; i<s_vals.getSize(); i++){
-        s_vals[i] = pt_vals[i];
-    }
 
 
-    // How to make this work?
-    // http://www.windows-tech.info/17/f84f874639695783.php
-    // maybe? http://edn.embarcadero.com/article/22016
-
-
-    SAFEARRAY * ptArr;
-    hr = s_vals.toSAFEARRAY(&ptArr);
-    if(hr != S_OK){
-        qCritical() << "populate SAFEARRAY failed.";
-    }
-    if(NULL == ptArr){
-        qCritical() << "Did not populate SAFEARRAY";
-    }
-    VARIANT ptV;
-    VariantInit(&ptV);
-    ptV.vt = VT_ARRAY | VT_R8;
-    V_ARRAY(&ptV) = ptArr;
-
-    LPDISPATCH p0_Disp;
-    //hr = math->CreatePoint(static_cast<VARIANT>(s_vals), static_cast<IDispatch**>(&pt0Disp));
-    hr = math->CreatePoint(ptV, static_cast<IDispatch **>(&p0_Disp));
-
-    if(hr != S_OK){
-        qCritical() << "Could not create math point.";
-    }else if(p0_Disp != NULL){
-        hr = p0_Disp->QueryInterface(IID_IMathPoint, (LPVOID *)&pt0Ptr);
-        if(! SUCCEEDED(hr)){
-            qCritical () << "Could not create MathPoint";
-        }
-    }else{
-        return retval;
-    }
-
+    /// Creata math point from given values
+    pt0Ptr = makeMathPoint(pt_vals);
     if(NULL == pt0Ptr){
-        return retval;
+         qCritical () << "MathPoint not created from given vector.";
+         return retval;
     }
 
+    /// Compute the tranformation
+    hr = pt0Ptr->IMultiplyTransform(xT, &pt1Ptr);
 
-    pt0Ptr->IMultiplyTransform(xT, &pt1Ptr);
-
-
+    /// Extract values from the resulting point
     VARIANT pt_resultsV;
-    pt1Ptr->get_ArrayData(static_cast<VARIANT *>(& pt_resultsV));
-
+    hr = pt1Ptr->get_ArrayData(static_cast<VARIANT *>(& pt_resultsV));
     SafeDoubleArray arr_pt1(pt_resultsV);
     for(int i=0; i<arr_pt1.getSize(); i++){
-        qDebug() << arr_pt1[i];
         retval[i] = arr_pt1[i];
     }
-
 
     /// Cleanup resources
     pt0Ptr->Release();
@@ -115,32 +88,42 @@ IMathTransformPtr M3dHelper::xformI(){
     return xformT(makeVector(vals, 12), 1.0);
 }
 
+IMathPointPtr M3dHelper::makeMathPoint(std::vector<double> vals){
+    IMathPointPtr retval = NULL;
+    HRESULT hr;
 
+    SafeDoubleArray s_vals(3);
+    for(uint i=0; i<s_vals.getSize(); i++){
+        s_vals[i] = vals[i];
+    }
+    VARIANT ptV;
+    s_vals.toVARIANT(&ptV);
+    LPDISPATCH pDisp;
+    hr = math->CreatePoint(ptV, static_cast<IDispatch **>(&pDisp));
+
+    if(hr != S_OK){
+        qCritical() << "Could not create math point.";
+    }else if(pDisp != NULL){
+        hr = pDisp->QueryInterface(IID_IMathPoint, (LPVOID *)&retval);
+        if(! SUCCEEDED(hr)){
+            qCritical () << "Could not create MathPoint";
+        }
+    }else{
+        qCritical() << "Could not create math point.";
+        return NULL;
+    }
+
+    return retval;
+}
 
 IMathTransformPtr M3dHelper::xformT(std::vector<double> c, double scale){
     if(c.size() != 12){
         return NULL;
     }
-/*
-    double vect_vals_x[3] = {c[0], c[1], c[2]};
-    double vect_vals_y[3] = {c[3], c[4], c[5]};
-    double vect_vals_z[3] = {c[6], c[7], c[8]};
-    double vect_vals_trans[3] = {c[9], c[10], c[11]};
+    HRESULT hr;
 
-    IMathVectorPtr ivect_x;
-    IMathVectorPtr ivect_y;
-    IMathVectorPtr ivect_z;
-    IMathVectorPtr ivect_trans;
-
-    math->ICreateVector(vect_vals_x, &ivect_x);
-    math->ICreateVector(vect_vals_y, &ivect_y);
-    math->ICreateVector(vect_vals_z, &ivect_z);
-    math->ICreateVector(vect_vals_trans, &ivect_trans);
-    //math->ComposeTransform(ivect_x, ivect_y, ivect_z, ivect_trans, scale, &xform);
-*/
-
-    double vals[16];
-    for(int i=0; i<16; i++){
+    SafeDoubleArray vals(16);
+    for(uint i=0; i < vals.getSize(); i++){
         if(i<12){
             vals[i] = c[i];
         }else if(i==12){
@@ -150,6 +133,18 @@ IMathTransformPtr M3dHelper::xformT(std::vector<double> c, double scale){
         }
     }
     IMathTransformPtr xform;
-    math->ICreateTransform(vals, &xform);
+    LPDISPATCH pDisp = NULL;
+    hr = math->CreateTransform(vals, &pDisp);
+
+    if(!SUCCEEDED(hr)){
+        return NULL;
+    }
+
+    hr = pDisp->QueryInterface(IID_IMathTransform, (LPVOID *)&xform);
+
+    if(!SUCCEEDED(hr)){
+        return NULL;
+    }
     return xform;
 }
+

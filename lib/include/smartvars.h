@@ -79,6 +79,20 @@ public:
         return SafeArrayCopy(m_pSafeArray, saDataOut);
     }
 
+    HRESULT toVARIANT(VARIANT * v){
+        HRESULT hr;
+        VariantInit(v);
+        v->vt = VT_ARRAY | type;
+
+        // Get data as safe array
+        SAFEARRAY * sa;
+        hr =  this->toSAFEARRAY(&sa);
+
+        // assign array data
+        V_ARRAY(v) = sa;
+        return hr;
+    }
+
 protected:
 
     void UnaccessData(){

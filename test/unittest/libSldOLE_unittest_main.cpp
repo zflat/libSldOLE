@@ -21,10 +21,10 @@ int main(int argc, char *argv[]){
     app.setQuitOnLastWindowClosed(false);
 
     TestSldAppContext test1;
-    // QTest::qExec(&test1, argc, argv);
+    QTest::qExec(&test1, argc, argv);
 
     TestSldModel test2;
-    // QTest::qExec(&test2, argc, argv);
+    QTest::qExec(&test2, argc, argv);
 
     TestM3dHelper test3;
     QTest::qExec(&test3, argc, argv);
