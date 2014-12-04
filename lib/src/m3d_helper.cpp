@@ -104,7 +104,7 @@ IMathPointPtr M3dHelper::makeMathPoint(std::vector<double> vals){
     if(hr != S_OK){
         qCritical() << "Could not create math point.";
     }else if(pDisp != NULL){
-        hr = pDisp->QueryInterface(IID_IMathPoint, (LPVOID *)&retval);
+        hr = pDisp->QueryInterface(IID_IMathPoint, (LPVOID *)(&retval));
         if(! SUCCEEDED(hr)){
             qCritical () << "Could not create MathPoint";
         }

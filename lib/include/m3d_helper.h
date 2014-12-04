@@ -31,6 +31,8 @@ public:
     IMathTransformPtr xformT(std::vector<double> rot_trans, double scale = 1);
 
     IMathPointPtr makeMathPoint(std::vector<double> vals);
+
+    IMathUtilityPtr util(){return math;}
     
 protected:
     SldContext * context;
