@@ -25,7 +25,9 @@ public:
 	*/
     std::vector<double> warp(std::vector<double> pt_0, IMathTransformPtr xform);
 
-    static std::vector<double> makeVector( double * data, int size );
+    static std::vector<double> makeVector( double * data, int size );    
+
+    static double bounded_rand(double min, double max);
 
     IMathTransformPtr xformI();
     IMathTransformPtr xformT(std::vector<double> rot_trans, double scale = 1);

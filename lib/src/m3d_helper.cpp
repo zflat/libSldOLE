@@ -148,3 +148,8 @@ IMathTransformPtr M3dHelper::xformT(std::vector<double> c, double scale){
     return xform;
 }
 
+
+double M3dHelper::bounded_rand(double min, double max){
+    return min+((double)qrand()/ RAND_MAX)*(max-min);
+}
+

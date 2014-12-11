@@ -5,6 +5,7 @@
 #include "sld_file_info.h"
 #include "smartvars.h"
 #include "color_helper.h"
+#include "m3d_helper.h"
 
 SldModel::~SldModel(){}
 
@@ -209,8 +210,6 @@ bool SldModel::change_color(const std::vector<double>& color){
     HRESULT hres = NOERROR;
 
 
-    std::vector<double> color_vals = \
-            (color.size() >= 3) ? color: ColorHelper::rand_color();
 
     // SafeArrays example
     // http://help.solidworks.com/2013/English/api/sldworksapi/Get_Spline_Points_Example_CPlusPlus_COM.htm
@@ -223,6 +222,18 @@ bool SldModel::change_color(const std::vector<double>& color){
     VARIANT mat_props;
     pModel->get_MaterialPropertyValues(static_cast<VARIANT*>(&mat_props));
     SafeDoubleArray arr_mat_props(mat_props);
+
+
+    //////////////////////////////
+    /// \brief get new color vals
+
+    std::vector<double> rgb0_vals(3);
+    for(int i=0; i<rgb0_vals.size(); i++){
+        rgb0_vals[i] = arr_mat_props[i];
+    }
+
+    std::vector<double> color_vals = \
+            (color.size() >= 3) ? color: ColorHelper::rand_rgb(rgb0_vals);
 
     /////////////////////////////////////////////////
     // Overwrite the color in the material properties array

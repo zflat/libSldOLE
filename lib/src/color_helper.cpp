@@ -1,4 +1,7 @@
 #include "color_helper.h"
+#include "m3d_helper.h"
+#include <cmath>
+#include <limits>
 
 // http://www.f4.fhtw-berlin.de/~barthel/ImageJ/ColorInspector//HTMLHelp/farbraumJava.htm
 // http://www.brucelindbloom.com/index.html?Equations.html
@@ -10,22 +13,53 @@ ColorHelper::ColorHelper()
 }
 
 
-std::vector<double> ColorHelper::rand_color(){
+std::vector<double> ColorHelper::rand_hsv(std::vector<double> c_hsv){
+    bool iterate_entropy = c_hsv.size() > 0;
+    std::vector<double> hsv_map(3);
+    double h0;
+    double h = 0;
+
+    if(iterate_entropy)
+        h0= c_hsv[0];
+
+    for(int i=0; i< ((double)qrand()/ RAND_MAX)*155; i++){
+        /// Random hue
+        hsv_map[0] = M3dHelper::bounded_rand(0.1, 1.0);
+        h = hsv_map[0];
+
+        /// Random saturation
+        hsv_map[1] = M3dHelper::bounded_rand(0.35, 0.85);
+
+        /// Random value
+        hsv_map[2] = M3dHelper::bounded_rand(0.35, 0.85);
+
+        if(iterate_entropy && std::abs(h-h0) >= ColorHelper::min_color_entropy())
+        {
+            break;
+        }
+    }
+
+    return hsv_map;
+}
+
+std::vector<double> ColorHelper::rand_rgb(std::vector<double> c_rgb){
+    std::vector<double> c = rgb2hsv(c_rgb);
+    std::vector<double> hsv_vals = rand_hsv(c);
+
     /// Random hue
-    double h = bounded_rand(0.0, 1.0);
+    double h = hsv_vals[0];
 
     /// Random saturation
-    double s = bounded_rand(0.35, 0.85);
+    double s = hsv_vals[1];
 
     /// Random value
-    double v = bounded_rand(0.35, 0.85);
+    double v = hsv_vals[2];
+
+    qDebug()<<"H: " << h;
 
     return hsv2rgb(h, 0.6, 0.85);
 }
 
-double ColorHelper::bounded_rand(double min, double max){
-    return min+((double)qrand()/ RAND_MAX)*(max-min);
-}
 
 /**
  * @brief ColorHelper::hsv2rgb
@@ -34,12 +68,12 @@ double ColorHelper::bounded_rand(double min, double max){
  *
  * Adapted from GNU Octave hsv2rgb
  */
-std::vector<double> ColorHelper::hsv2rgb(std::vector<double> rgb){
+std::vector<double> ColorHelper::hsv2rgb(std::vector<double> hsv){
 
     /// Extract values
-    double h = rgb[0];
-    double s = rgb[1];
-    double v = rgb[2];
+    double h = hsv[0];
+    double s = hsv[1];
+    double v = hsv[2];
 
     return hsv2rgb(h, s, v);
 }
@@ -67,5 +101,70 @@ std::vector<double> ColorHelper::hsv2rgb(double h, double s, double v){
         }
     }
 
+    return hsv_map;
+}
+
+
+std::vector<double> ColorHelper::rgb2hsv(std::vector<double> rgb){
+
+    /// Extract values
+    double r = rgb[0];
+    double g = rgb[1];
+    double b = rgb[2];
+
+    return rgb2hsv(r, g, b);
+}
+
+/**
+ * @brief ColorHelper::hsv2rgb
+ * @param rgb
+ * @return
+ *
+ * Adapted from GNU Octave rgb2hsv
+ */
+std::vector<double> ColorHelper::rgb2hsv(double r, double g, double b){
+    std::vector<double> rgb_map(3);
+    rgb_map[0] = r;
+    rgb_map[1] = g;
+    rgb_map[2] = b;
+    std::vector<double> hsv_map(3);
+    std::vector<double> hue(3);
+
+    double s=DBL_MAX;
+    double v=0;
+
+    // assign s to min of rgb
+    for(int i=0; i< rgb_map.size(); i++){if(s > rgb_map[i]){s = rgb_map[i];}}
+
+    // assign v to max of rgb
+    for(int i=0; i< rgb_map.size(); i++){if(v < rgb_map[i]){v = rgb_map[i];}}
+
+    //set hue to zero for undefined values (gray has no hue)
+    hsv_map[0] = 0;
+    bool notgray = (s != v);
+
+    if(notgray){
+        if(v == b){
+            //blue hue
+            hsv_map[0] = 2.0/3 + 1.0/6*(r-g)/(v-s);
+        }else if(v == g){
+            //green hue
+            hsv_map[0] = 1.0/3 + 1.0/6*(b-r)/(v-s);
+        }else if(v==r){
+            //red hue
+            hsv_map[0] = 1.0/6*(g-b)/(v-s);
+        }
+    }
+
+    // correct for negative red
+    if(hsv_map[0] < 0){
+        hsv_map[0]++;
+    }
+
+    // set the saturation
+    s = (notgray) ? 1-(s-v) : 0;
+
+    hsv_map[1] = s;
+    hsv_map[2] = v;
     return hsv_map;
 }
