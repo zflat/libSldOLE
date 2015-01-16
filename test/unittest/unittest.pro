@@ -23,10 +23,12 @@ INCLUDEPATH += $$PWD/src \
 HEADERS += $$PWD/*.h \
     testsldmodel.h \
     testsldappcontext.h \
+    testsldpdmwcontext.h \
     testm3dhelper.h
 
 SOURCES += $$PWD/*.cpp \
     testsldmodel.cpp \
+    testsldpdmwcontext.cpp \
     testsldappcontext.cpp \
     testm3dhelper.cpp
 SOURCES += $$PWD/libSldOLE_unittest_main.cpp

@@ -6,6 +6,8 @@
 #import "C:\Program Files\SolidWorks Corp\SolidWorks\sldworks.tlb" raw_interfaces_only, raw_native_types, no_namespace, named_guids
 #import "C:\Program Files\SolidWorks Corp\SolidWorks\swconst.tlb"  raw_interfaces_only, raw_native_types, no_namespace, named_guids
 
+#import "C:\Program Files\Common Files\SolidWorks Shared\pdmworks.dll" raw_interfaces_only, no_namespace, named_guids
+
 #include <windows.h>
 #include <comdef.h>
 #include <objbase.h>

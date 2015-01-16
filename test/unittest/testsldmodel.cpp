@@ -122,6 +122,7 @@ void TestSldModel::test_change_color(){
     QString part_path = QDir(DATAROOT).absoluteFilePath(part_fname);
     bool bres = model->open(part_path, ptrModel);
     QVERIFY2(bres, "Could not open open file");
+    QVERIFY2(NULL != model->iptr(), "Null pointer to the model");
 
     VARIANT mat_props0;
     model->iptr()->get_MaterialPropertyValues(static_cast<VARIANT*>(&mat_props0));
@@ -132,6 +133,7 @@ void TestSldModel::test_change_color(){
     VARIANT mat_props1;
     model->iptr()->get_MaterialPropertyValues(static_cast<VARIANT*>(&mat_props1));
     SafeDoubleArray arr_mat_props1(mat_props1);
+
 
     double clr_val(arr_mat_props1[0]);
     bool identical_channels = false;

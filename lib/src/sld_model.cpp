@@ -87,7 +87,7 @@ bool SldModel::open(QString const& fpath, IModelDoc2Ptr* pRetModel){
         qWarning() << "Could net initialize the model on opening";
         return false;
     }else{
-        pRetModel = (IModelDoc2Ptr*)&pModel;        
+        pRetModel = (IModelDoc2Ptr*)&pModel;
         return true;
     }
 }
