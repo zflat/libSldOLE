@@ -13,7 +13,11 @@ class LIBSLDOLESHARED_EXPORT SldPdmwContext
 public:
     SldPdmwContext();
     ~SldPdmwContext();
-    IPDMWConnectionPtr getVault();
+    IPDMWConnectionPtr get_swVault();
+
+    long login();
+    long login(const QString & username, const QString & userpwd, const QString & vaultserver, \
+               long request_port = 40000, long data_port = 30000);
 
 private:
     IPDMWConnectionPtr swPdmw;
