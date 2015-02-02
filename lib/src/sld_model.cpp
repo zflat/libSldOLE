@@ -7,7 +7,12 @@
 #include "color_helper.h"
 #include "m3d_helper.h"
 
-SldModel::~SldModel(){}
+SldModel::~SldModel(){
+    if(NULL != pModel){
+        pModel->Release();
+        pModel = NULL;
+    }
+}
 
 
 SldModel::SldModel(SldContext * sld_cont) :  context(sld_cont), pModel(NULL){}

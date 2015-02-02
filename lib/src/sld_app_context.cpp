@@ -3,6 +3,10 @@
 
 SldAppContext::~SldAppContext()
 {
+    if(NULL != swApp){
+        swApp->Release();
+        swApp = NULL;
+    }
 }
 
 SldAppContext::SldAppContext()
