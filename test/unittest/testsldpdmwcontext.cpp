@@ -60,7 +60,7 @@ void TestSldPdmwContext::test_get_first_doc()
 }
 
 void TestSldPdmwContext::test_open_connection()
-{ /*
+{
     SldPdmwContext * vault = new SldPdmwContext();
     IPDMWConnectionPtr swVaultPtr = vault->get_swVault();
     QVERIFY2(swVaultPtr != NULL, "Failure");
@@ -73,7 +73,7 @@ void TestSldPdmwContext::test_open_connection()
     swVaultPtr->Login(bstr_username, bstr_userpwd, bstr_vaultserver, 40000, 30000, &err);
     QVERIFY2(err==0, qPrintable(QString("Login failed. Error: %1").arg(err)));
 
-    delete vault;*/
+    delete vault;
 }
 
 void TestSldPdmwContext::test_login(){
