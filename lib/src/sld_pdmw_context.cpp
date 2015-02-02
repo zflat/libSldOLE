@@ -9,6 +9,8 @@
 
 SldPdmwContext::SldPdmwContext()
 {
+    is_logged_in = false;
+
     // Exmple at https://support.microsoft.com/kb/216686
     // Get CLSID for our server...
     CLSID clsid;
@@ -23,7 +25,7 @@ SldPdmwContext::SldPdmwContext()
     IDispatch *pPdmwApp;
     hr = CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER, IID_IDispatch, (void **)&pPdmwApp);
 
-    if(FAILED(hr)) {
+    if(FAILED(hr) && !pPdmwApp) {
         qWarning() << "CoCreateInstance failed to start pdmw";
         return;
     }
@@ -34,7 +36,8 @@ SldPdmwContext::SldPdmwContext()
 SldPdmwContext::~SldPdmwContext()
 {
     if(NULL != swPdmw){
-        swPdmw->Logout();
+        if(is_logged_in)
+            swPdmw->Logout();
         swPdmw->Release();
     }
 }
@@ -58,6 +61,7 @@ long SldPdmwContext::login(const QString & username, const QString & userpwd, co
 
         swPdmw->Login(bstr_username, bstr_userpwd, bstr_vaultserver, request_port, data_port, &err);
     }
+    is_logged_in = (0 == err);
     return err;
 }
 
@@ -90,6 +94,9 @@ long SldPdmwContext::login(){
     QString username = vendorSettings["pdmw_username"].toString();
     QString userpwd = vendorSettings["pdmw_userpwd"].toString();
     QString server = vendorSettings["pdmw_server"].toString();
+    long err=-1;
 
-    return login(username, userpwd, server);
+    err = login(username, userpwd, server);
+    is_logged_in = (0 == err);
+    return err;
 }

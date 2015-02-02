@@ -21,6 +21,7 @@ public:
 
 private:
     IPDMWConnectionPtr swPdmw;
+    bool is_logged_in;
 };
 
 #endif // SLD_PDMW_CONTEXT_H
